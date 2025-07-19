@@ -1,13 +1,13 @@
-// Configuração da API
+
 const API_BASE = '/api';
 
-// Estado da aplicação
+
 let produtos = [];
 let categorias = [];
 let produtoEditando = null;
 let categoriaEditando = null;
 
-// Inicialização
+
 document.addEventListener('DOMContentLoaded', function() {
     carregarCategorias();
     carregarProdutos();
@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     atualizarRelatorios();
 });
 
-// Event Listeners
+
 function configurarEventListeners() {
-    // Filtros
+   
     document.getElementById('buscarProduto').addEventListener('input', filtrarProdutos);
     document.getElementById('filtroCategoria').addEventListener('change', filtrarProdutos);
     document.getElementById('filtroEstoqueBaixo').addEventListener('change', filtrarProdutos);
@@ -27,7 +27,7 @@ function configurarEventListeners() {
     document.getElementById('formCategoria').addEventListener('submit', salvarCategoria);
     document.getElementById('formEstoque').addEventListener('submit', atualizarEstoque);
     
-    // Fechar modais clicando fora
+  
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
@@ -37,23 +37,23 @@ function configurarEventListeners() {
     });
 }
 
-// Navegação entre abas
+
 function mostrarAba(aba) {
     // Remover classe active de todas as abas
     document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
     
-    // Ativar aba selecionada
+    
     event.target.classList.add('active');
     document.getElementById(aba).classList.add('active');
     
-    // Carregar dados específicos da aba
+
     if (aba === 'relatorios') {
         atualizarRelatorios();
     }
 }
 
-// Funções de API
+
 async function fazerRequisicao(url, opcoes = {}) {
     mostrarLoading(true);
     try {
@@ -80,7 +80,6 @@ async function fazerRequisicao(url, opcoes = {}) {
     }
 }
 
-// Carregar dados
 async function carregarCategorias() {
     try {
         categorias = await fazerRequisicao('/categorias');
@@ -100,7 +99,6 @@ async function carregarProdutos() {
     }
 }
 
-// Renderização
 function renderizarProdutos(produtosFiltrados = produtos) {
     const tbody = document.getElementById('tabelaProdutos');
     
@@ -190,14 +188,13 @@ function atualizarSelectCategorias() {
             `<option value="${categoria.id}">${categoria.nome}</option>`
         ).join('');
         
-        // Restaurar seleção se ainda existir
+       
         if (opcaoAtual) {
             select.value = opcaoAtual;
         }
     });
 }
 
-// Filtros
 function filtrarProdutos() {
     const busca = document.getElementById('buscarProduto').value.toLowerCase();
     const categoriaId = document.getElementById('filtroCategoria').value;
@@ -225,7 +222,7 @@ function filtrarProdutos() {
     renderizarProdutos(produtosFiltrados);
 }
 
-// Status helpers
+
 function getStatusClass(produto) {
     if (produto.quantidade_estoque === 0) return 'status-out';
     if (produto.estoque_baixo) return 'status-low';
@@ -238,13 +235,12 @@ function getStatusText(produto) {
     return 'OK';
 }
 
-// Modais
 function abrirModal(modalId) {
     const modal = document.getElementById(modalId);
     modal.classList.add('show');
     modal.style.display = 'flex';
     
-    // Limpar formulário se for novo
+   
     if (modalId === 'modalProduto' && !produtoEditando) {
         document.getElementById('formProduto').reset();
         document.getElementById('produtoId').value = '';
@@ -272,7 +268,7 @@ function fecharModal(modalId) {
     }
 }
 
-// CRUD Produtos
+
 async function salvarProduto(event) {
     event.preventDefault();
     
@@ -348,7 +344,7 @@ async function deletarProduto(id) {
     }
 }
 
-// CRUD Categorias
+
 async function salvarCategoria(event) {
     event.preventDefault();
     
@@ -416,7 +412,7 @@ async function deletarCategoria(id) {
     }
 }
 
-// Gestão de Estoque
+
 function abrirModalEstoque(produtoId) {
     const produto = produtos.find(p => p.id === produtoId);
     if (!produto) return;
@@ -450,14 +446,13 @@ async function atualizarEstoque(event) {
     }
 }
 
-// Relatórios
 async function atualizarRelatorios() {
     try {
-        // Produtos com estoque baixo
+       
         const estoqueBaixo = await fazerRequisicao('/relatorios/estoque-baixo');
         document.getElementById('produtosEstoqueBaixo').textContent = estoqueBaixo.total;
         
-        // Valor total do estoque
+       
         const valorEstoque = await fazerRequisicao('/relatorios/valor-estoque');
         document.getElementById('valorTotalEstoque').textContent = 
             `R$ ${valorEstoque.valor_total_estoque.toFixed(2)}`;
@@ -493,7 +488,6 @@ async function verEstoqueBaixo() {
     }
 }
 
-// Utilitários
 function mostrarLoading(mostrar) {
     const loading = document.getElementById('loading');
     loading.style.display = mostrar ? 'flex' : 'none';
@@ -512,7 +506,7 @@ function mostrarToast(mensagem, tipo = 'info') {
     
     container.appendChild(toast);
     
-    // Remover após 5 segundos
+  
     setTimeout(() => {
         toast.remove();
     }, 5000);
