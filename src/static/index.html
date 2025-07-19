@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gerenciamento de Estoque</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-boxes"></i> Sistema de Estoque</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="abrirModal('modalProduto')">
+                        <i class="fas fa-plus"></i> Novo Produto
+                    </button>
+                    <button class="btn btn-secondary" onclick="abrirModal('modalCategoria')">
+                        <i class="fas fa-tags"></i> Nova Categoria
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="mostrarAba('produtos')">
+                <i class="fas fa-box"></i> Produtos
+            </button>
+            <button class="nav-tab" onclick="mostrarAba('categorias')">
+                <i class="fas fa-tags"></i> Categorias
+            </button>
+            <button class="nav-tab" onclick="mostrarAba('relatorios')">
+                <i class="fas fa-chart-bar"></i> Relatórios
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Aba Produtos -->
+            <div id="produtos" class="tab-content active">
+                <div class="content-header">
+                    <h2>Gerenciar Produtos</h2>
+                    <div class="filters">
+                        <input type="text" id="buscarProduto" placeholder="Buscar produto..." class="search-input">
+                        <select id="filtroCategoria" class="filter-select">
+                            <option value="">Todas as categorias</option>
+                        </select>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="filtroEstoqueBaixo">
+                            <span>Apenas estoque baixo</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Estoque</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaProdutos">
+                            <!-- Produtos serão carregados aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Aba Categorias -->
+            <div id="categorias" class="tab-content">
+                <div class="content-header">
+                    <h2>Gerenciar Categorias</h2>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th>Produtos</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaCategorias">
+                            <!-- Categorias serão carregadas aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Aba Relatórios -->
+            <div id="relatorios" class="tab-content">
+                <div class="content-header">
+                    <h2>Relatórios</h2>
+                </div>
+                
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <div class="report-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="report-content">
+                            <h3>Produtos com Estoque Baixo</h3>
+                            <p class="report-value" id="produtosEstoqueBaixo">-</p>
+                            <button class="btn btn-outline" onclick="verEstoqueBaixo()">Ver Detalhes</button>
+                        </div>
+                    </div>
+                    
+                    <div class="report-card">
+                        <div class="report-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="report-content">
+                            <h3>Valor Total do Estoque</h3>
+                            <p class="report-value" id="valorTotalEstoque">-</p>
+                            <button class="btn btn-outline" onclick="atualizarRelatorios()">Atualizar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="detalhesEstoqueBaixo" class="details-section" style="display: none;">
+                    <h3>Produtos com Estoque Baixo</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Estoque Atual</th>
+                                    <th>Estoque Mínimo</th>
+                                    <th>Categoria</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaEstoqueBaixo">
+                                <!-- Produtos com estoque baixo -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Produto -->
+    <div id="modalProduto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="tituloModalProduto">Novo Produto</h3>
+                <button class="close-btn" onclick="fecharModal('modalProduto')">&times;</button>
+            </div>
+            <form id="formProduto" class="modal-form">
+                <input type="hidden" id="produtoId">
+                
+                <div class="form-group">
+                    <label for="produtoNome">Nome *</label>
+                    <input type="text" id="produtoNome" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="produtoDescricao">Descrição</label>
+                    <textarea id="produtoDescricao" rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="produtoPreco">Preço *</label>
+                        <input type="number" id="produtoPreco" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produtoCategoria">Categoria *</label>
+                        <select id="produtoCategoria" required>
+                            <option value="">Selecione uma categoria</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="produtoEstoque">Quantidade em Estoque</label>
+                        <input type="number" id="produtoEstoque" min="0" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produtoEstoqueMinimo">Estoque Mínimo</label>
+                        <input type="number" id="produtoEstoqueMinimo" min="0" value="5">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="produtoCodigoBarras">Código de Barras</label>
+                    <input type="text" id="produtoCodigoBarras">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalProduto')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Categoria -->
+    <div id="modalCategoria" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="tituloModalCategoria">Nova Categoria</h3>
+                <button class="close-btn" onclick="fecharModal('modalCategoria')">&times;</button>
+            </div>
+            <form id="formCategoria" class="modal-form">
+                <input type="hidden" id="categoriaId">
+                
+                <div class="form-group">
+                    <label for="categoriaNome">Nome *</label>
+                    <input type="text" id="categoriaNome" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoriaDescricao">Descrição</label>
+                    <textarea id="categoriaDescricao" rows="3"></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalCategoria')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Estoque -->
+    <div id="modalEstoque" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Atualizar Estoque</h3>
+                <button class="close-btn" onclick="fecharModal('modalEstoque')">&times;</button>
+            </div>
+            <form id="formEstoque" class="modal-form">
+                <input type="hidden" id="estoqueId">
+                
+                <div class="form-group">
+                    <label>Produto</label>
+                    <p id="estoqueProdutoNome" class="readonly-field"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="estoqueOperacao">Operação</label>
+                    <select id="estoqueOperacao" required>
+                        <option value="definir">Definir quantidade</option>
+                        <option value="adicionar">Adicionar ao estoque</option>
+                        <option value="remover">Remover do estoque</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="estoqueQuantidade">Quantidade</label>
+                    <input type="number" id="estoqueQuantidade" min="0" required>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalEstoque')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
