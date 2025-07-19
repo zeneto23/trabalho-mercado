@@ -1,4 +1,4 @@
-/* Reset e Base */
+
 * {
     margin: 0;
     padding: 0;
@@ -18,7 +18,7 @@ body {
     padding: 20px;
 }
 
-/* Header */
+
 .header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -55,7 +55,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* Buttons */
 .btn {
     padding: 12px 24px;
     border: none;
@@ -127,7 +126,6 @@ body {
     font-size: 12px;
 }
 
-/* Navigation Tabs */
 .nav-tabs {
     display: flex;
     background: rgba(255, 255, 255, 0.95);
@@ -167,7 +165,6 @@ body {
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-/* Main Content */
 .main-content {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -200,7 +197,6 @@ body {
     color: #2d3748;
 }
 
-/* Filters */
 .filters {
     display: flex;
     gap: 16px;
@@ -253,7 +249,6 @@ body {
     accent-color: #667eea;
 }
 
-/* Tables */
 .table-container {
     overflow-x: auto;
     border-radius: 12px;
@@ -291,7 +286,6 @@ body {
     border-bottom: none;
 }
 
-/* Status Badges */
 .status-badge {
     padding: 4px 12px;
     border-radius: 20px;
@@ -322,7 +316,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* Reports */
 .reports-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -385,7 +378,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Modals */
 .modal {
     display: none;
     position: fixed;
@@ -505,7 +497,6 @@ body {
     border-top: 1px solid #e2e8f0;
 }
 
-/* Loading */
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -560,7 +551,6 @@ body {
     border-left-color: #d69e2e;
 }
 
-/* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -593,7 +583,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .container {
         padding: 12px;
